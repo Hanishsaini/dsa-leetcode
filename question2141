@@ -1,0 +1,25 @@
+class Solution:
+    def maxRunTime(self, n, batteries):
+        # upper bound: total minutes divided among n computers
+        left, right = 0, sum(batteries) // n
+
+        def can_run(x):
+            # check if sum(min(b, x)) >= n * x
+            total = 0
+            need = x * n
+            for b in batteries:
+                total += b if b < x else x
+                if total >= need:
+                    return True
+            return total >= need
+
+        ans = 0
+        while left <= right:
+            mid = (left + right) // 2
+            if can_run(mid):
+                ans = mid
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return ans
